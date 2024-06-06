@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugin id="com.outsystems.payments" version="1.2.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+  <name>OSPayments</name>
+  <description>OutSystems-owned plugin for mobile payments</description>
+  <author>OutSystems Inc</author>
+  <js-module name="OSPayments" src="www/OSPayments.js">
+    <clobbers target="cordova.plugins.OSPayments"/>
+  </js-module>
+
+  <platform name="android">
+
+    <hook type="after_prepare" src="hooks/android/androidCopyPreferences.js" />
+
+    <config-file parent="/*" target="res/xml/config.xml">
+      <feature name="OSPayments">
+        <param name="android-package" value="com.outsystems.payments.OSPayments"/>
+      </feature>
+      <preference name="GradlePluginKotlinEnabled" value="true" />
+      <preference name="GradlePluginKotlinCodeStyle" value="official" />
+      <preference name="AndroidXEnabled" value="true"/>
+    </config-file>
+
+    <config-file parent="/manifest/application" target="AndroidManifest.xml">
+      <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true" />
+    </config-file>
+
+    <config-file parent="/resources" target="res/values/strings.xml">
+      <string name="merchant_name">MERCHANT_NAME</string>
+      <string name="merchant_country_code">MERCHANT_COUNTRY_CODE</string>
+      <string name="payment_allowed_networks">ALLOWED_NETWORKS</string>
+      <string name="payment_supported_capabilities">SUPPORTED_CAPABILITIES</string>
+      <string name="payment_supported_card_countries">SUPPORTED_CARD_COUNTRIES</string>
+      <string name="shipping_supported_contacts">SHIPPING_SUPPORTED_CONTACTS</string>
+      <string name="shipping_country_codes">SHIPPING_COUNTRY_CODES</string>
+      <string name="billing_supported_contacts">BILLING_SUPPORTED_CONTACTS</string>
+      <string name="gateway">GATEWAY</string>
+      <string name="backend_url">BACKEND_URL</string>
+      <string name="gateway_merchant_id">GATEWAY_MERCHANT_ID</string>
+      <string name="stripe_version">STRIPE_VERSION</string>
+      <string name="stripe_pub_key">STRIPE_PUB_KEY</string>
+    </config-file>
+
+    <source-file src="src/android/com/outsystems/payments/OSPayments.kt" target-dir="app/src/main/kotlin/com/outsystems/payments"/>
+    <framework src="src/android/com/outsystems/payments/build.gradle" custom="true" type="gradleReference" />
+
+  </platform>
+
+  <platform name="ios">
+    <!-- Hooks -->
+    <hook type="after_prepare" src="hooks/ios/iOSCopyPreferences.js" />
+
+    <dependency id="cordova-plugin-add-swift-support" url="https://github.com/OutSystems/cordova-plugin-add-swift-support.git#2.0.3-OS1"/>
+
+    <config-file parent="/*" target="config.xml">
+      <feature name="OSPayments">
+        <param name="ios-package" value="OSPayments"/>
+      </feature>
+      <preference name="deployment-target" value="13" />
+      <preference name="UseSwiftLanguageVersion" value="5" />
+    </config-file>
+
+    <config-file target="*-Debug.plist" parent="com.apple.developer.in-app-payments">
+      <array>
+        <string>APPLE_PAY_MERCHANT_ID</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Release.plist" parent="com.apple.developer.in-app-payments">
+      <array>
+        <string>APPLE_PAY_MERCHANT_ID</string>
+      </array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayMerchantID">
+         <string>APPLE_PAY_MERCHANT_ID</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayMerchantName">
+         <string>APPLE_PAY_MERCHANT_NAME</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayMerchantCountryCode">
+         <string>APPLE_PAY_MERCHANT_COUNTRY_CODE</string>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayPaymentAllowedNetworks">
+         <array>APPLE_PAY_PAYMENT_ALLOWED_NETWORKS</array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayPaymentSupportedCapabilities">
+         <array>APPLE_PAY_PAYMENT_SUPPORTED_CAPABILITIES</array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayPaymentSupportedCardCountries">
+         <array>APPLE_PAY_PAYMENT_SUPPORTED_CARD_COUNTRIES</array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayShippingSupportedContacts">
+         <array>APPLE_PAY_SHIPPING_SUPPORTED_CONTACTS</array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayBillingSupportedContacts">
+         <array>APPLE_PAY_BILLING_SUPPORTED_CONTACTS</array>
+    </config-file>
+
+    <config-file target="*-Info.plist" parent="ApplePayPaymentGateway">
+        <dict>
+          <key>ApplePayPaymentGatewayName</key>
+          <string>APPLE_PAY_PAYMENT_GATEWAY_NAME</string>
+
+          <key>ApplePayRequestURL</key>
+          <string>APPLE_PAY_PAYMENT_REQUEST_URL</string>
+
+          <key>ApplePayStripePublishableKey</key>
+          <string>APPLE_PAY_PAYMENT_STRIPE_PUBLISHABLE_KEY</string>
+        </dict>
+    </config-file>
+
+    <!-- iOS Source Files -->
+    <source-file src="src/ios/OSPayments.swift"/>
+    <framework src="src/ios/frameworks/OSPaymentsLib.xcframework" embed="true" custom="true" />
+
+    <podspec>
+        <config>
+            <source url="https://cdn.cocoapods.org/"/>
+        </config>
+        <pods use-frameworks="true">
+            <pod name="OSCommonPluginLib" spec="1.0.0" />
+        </pods>
+    </podspec>
+
+  </platform>
+
+</plugin>
